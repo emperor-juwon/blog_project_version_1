@@ -22,9 +22,9 @@ server:
 ```
 spring:
   datasource:
-      url: jdbc:mariadb://localhost:3306/greendb
+      url: jdbc:mariadb://localhost:3306/juwondb
       driver-class-name: org.mariadb.jdbc.Driver
-      username: green
-      password: green1234
+      username: juwon
+      password: juwon1234
 ```
 
