@@ -8,12 +8,12 @@ server:
 spring:
   datasource:
     url: jdbc:mariadb://localhost:3306/juwondb
-    username: juwondb
+    username: juwon
     password: juwon1234
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     show-sql: true
