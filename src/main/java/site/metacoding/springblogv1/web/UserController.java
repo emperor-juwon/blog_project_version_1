@@ -1,13 +1,26 @@
 package site.metacoding.springblogv1.web;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
+import site.metacoding.springblogv1.domain.user.User;
+import site.metacoding.springblogv1.domain.user.UserRepository;
+
 @Controller
 public class UserController {
+
+    //DI
+    private UserRepository userRepository;
+
+       public UserController(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
     
 @GetMapping("/joinForm")
 public String joinForm() {
@@ -15,8 +28,11 @@ public String joinForm() {
 }
 
 @PostMapping("/join")
-public String join() {
-    return "redirect:/user/loginForm";
+public String join(User user) {
+     System.out.println("user: " + user);
+        User userEntity = userRepository.save(user);
+        System.out.println("userentity:  " + userEntity);
+    return "redirect:/loginForm";
 }
 
 @GetMapping("/loginForm")
@@ -24,8 +40,20 @@ public String loginForm() {
     return "user/loginForm";
 }
 
+//SELECT * FROM user WHERE username = ? AND password = ?
 @PostMapping("/login")
-public String login() {
+public String login(HttpServletRequest request, User user) {
+
+         HttpSession session = request.getSession();
+
+        User userEntity = userRepository.mLogin(user.getUsername(), user.getPassword());
+
+        if (userEntity == null) {
+            System.out.println("id혹은pw가 틀렸다 ");
+        } else {
+            System.out.println("login 성공");
+            session.setAttribute("principal", userEntity);
+        }
     return "redirect:/";
 }
 
