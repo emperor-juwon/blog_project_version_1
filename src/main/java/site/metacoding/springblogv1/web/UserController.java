@@ -2,9 +2,12 @@ package site.metacoding.springblogv1.web;
 
 import java.util.Optional;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,19 +47,28 @@ public String join(User user) {
 
     // 핵심로직
     User userEntity = userRepository.save(user);
-        
-
     return "redirect:/loginForm";
 }
 
 @GetMapping("/loginForm")
-public String loginForm() {
+public String loginForm(HttpServletRequest request, Model model) {
+
+    if (request.getCookies() != null) {
+        Cookie[] cookies = request.getCookies();
+    for (Cookie cookie : cookies) {
+        System.out.println("쿠키값: " + cookie.getName());
+        if (cookie.getName().equals("remember")) {
+            model.addAttribute("remember", cookie.getValue());
+        }
+    }
+    }
+    
     return "user/loginForm";
 }
 
 //SELECT * FROM user WHERE username = ? AND password = ?
 @PostMapping("/login")
-public String login(HttpServletRequest request, User user) {
+public String login(HttpServletResponse response, User user) {
 
         User userEntity = userRepository.mLogin(user.getUsername(), user.getPassword());
 
@@ -64,7 +76,13 @@ public String login(HttpServletRequest request, User user) {
             System.out.println("id혹은pw가 틀렸다 ");
         } else {
             System.out.println("login 성공");
-            session.setAttribute("principal", userEntity);
+
+            //session에 user정보 기록
+            session.setAttribute("principal", userEntity); 
+
+            if (user.getRemember() != null && user.getRemember().equals("on")) {
+                response.addHeader("Set-Cookie", "remember=" + user.getUsername());
+            }
         }
     return "redirect:/";
 }
@@ -102,7 +120,7 @@ public String updateForm() {
 }
 
 @PutMapping("/user/{id}")
-public String update(@PathVariable int id) {
+public String update(@PathVariable Integer id) {
     return "redirect:/user/" + id;
 }
 
