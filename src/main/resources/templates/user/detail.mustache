@@ -1,0 +1,21 @@
+{{>/layout/header}}
+<!-- 컨테이너 시작 -->
+<div class="container mt-3">
+
+    <!-- 회원 상세정보보기 폼 시작 -->
+    <div class="mb-3 mt-3">
+        {{user.username}}
+    </div>
+    <div class="mb-3">
+        {{user.password}}
+    </div>
+    <div class="mb-3">
+        {{user.email}}
+    </div>
+    <a href="/user/{{user.id}}/updateForm" class="btn btn-primary">정보수정</a>
+
+    <!-- 회원 상세정보보기 폼 끝 -->
+
+</div>
+<!-- 컨테이너 끝 -->
+{{>/layout/footer}}

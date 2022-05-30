@@ -8,10 +8,14 @@ server:
 spring:
   mustache:
     expose-session-attributes: true
+  output:
+    ansi:
+      enabled: always
   datasource:
     url: jdbc:mariadb://localhost:3306/juwondb
     username: juwon
     password: juwon1234
+
 
   jpa:
     hibernate:
@@ -19,6 +23,3 @@ spring:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     show-sql: true
-  output:
-    ansi:
-      enabled: always

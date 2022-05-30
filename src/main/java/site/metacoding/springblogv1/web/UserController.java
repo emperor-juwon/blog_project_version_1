@@ -1,11 +1,12 @@
 package site.metacoding.springblogv1.web;
 
-import java.lang.ProcessBuilder.Redirect;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,9 +20,11 @@ public class UserController {
 
     //DI
     private UserRepository userRepository;
+    private HttpSession session;
 
-       public UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+       public UserController(UserRepository userRepository, HttpSession session) {
+           this.userRepository = userRepository;
+           this.session = session;
     }
     
 @GetMapping("/joinForm")
@@ -55,8 +58,6 @@ public String loginForm() {
 @PostMapping("/login")
 public String login(HttpServletRequest request, User user) {
 
-         HttpSession session = request.getSession();
-
         User userEntity = userRepository.mLogin(user.getUsername(), user.getPassword());
 
         if (userEntity == null) {
@@ -69,22 +70,45 @@ public String login(HttpServletRequest request, User user) {
 }
 
 @GetMapping("/user/{id}")
-public String detail(@PathVariable Integer id) {
-    return "/user/detail";
+public String detail(@PathVariable Integer id, Model model) {
+    
+    //유효성 검사
+    User principal = (User) session.getAttribute("principal");
+    
+    //(1) 인증체크
+    if (principal == null) {
+        return "error/page1";
+    }
+    //(2)권한체크
+    if (principal.getId() != id) {
+        return "error/page1";
+    }
+
+    //핵심로직
+    Optional<User> userOp = userRepository.findById(id);
+
+    if (userOp.isPresent()) {
+        User userEntity = userOp.get();
+        model.addAttribute("user", userEntity);
+        return "user/detail";
+    } else {
+        return "error/page1";
+    }
 }
 
 @GetMapping("/user/{id}/updateForm")
-public String updateForm() {
+public String updateForm(@PathVariable int id) {
     return "user/updateForm";
 }
 
 @PutMapping("/user/{id}")
-public String update(@PathVariable Integer id) {
+public String update(@PathVariable int id) {
     return "redirect:/user/" + id;
 }
 
 @GetMapping("/logout")
 public String logout() {
+    session.invalidate();
     return "redirect:/";
 }
 }
