@@ -34,7 +34,7 @@ public class User {
     @Column(length = 20, nullable = false)
     private String password;
 
-    @Column(length=16000000)
+    @Column(length=16000000, nullable = false)
     private String email;
 
      @CreatedDate

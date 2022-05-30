@@ -1,5 +1,7 @@
 package site.metacoding.springblogv1.web;
 
+import java.lang.ProcessBuilder.Redirect;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -29,9 +31,18 @@ public String joinForm() {
 
 @PostMapping("/join")
 public String join(User user) {
-     System.out.println("user: " + user);
-        User userEntity = userRepository.save(user);
-        System.out.println("userentity:  " + userEntity);
+    //유효성체크
+    if (user.getUsername() == null || user.getPassword() == null || user.getEmail() == null) {
+        return "redirect:/joinForm";
+    }
+    if (user.getUsername().equals("") || user.getPassword().equals("") || user.getEmail().equals("")) {
+        return "redirect:/joinForm";
+    }
+
+    // 핵심로직
+    User userEntity = userRepository.save(user);
+        
+
     return "redirect:/loginForm";
 }
 
