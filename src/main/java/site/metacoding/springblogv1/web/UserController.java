@@ -96,8 +96,8 @@ public String detail(@PathVariable Integer id, Model model) {
     }
 }
 
-@GetMapping("/user/{id}/updateForm")
-public String updateForm(@PathVariable int id) {
+@GetMapping("/user/updateForm")
+public String updateForm() {
     return "user/updateForm";
 }
 
