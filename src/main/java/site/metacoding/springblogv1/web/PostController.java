@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 @Controller
 public class PostController {
     
-        @GetMapping("/post/writeForm")
+        @GetMapping("/s/post/writeForm")
         public String writeForm() {
             return "post/writeForm";
         }
@@ -25,22 +25,22 @@ public class PostController {
             return "post/detailForm";
         }
 
-        @GetMapping("/post/{id}/updateForm")
+        @GetMapping("/s/post/{id}/updateForm")
         public String updateForm(@PathVariable Integer id) {
             return "post/updateForm";
         }
 
-        @DeleteMapping("/post/{id}")
+        @DeleteMapping("/s/post/{id}")
         public String delete(@PathVariable Integer id) {
             return "redirect:/";
         }
 
-        @PutMapping("/post/{id}")
+        @PutMapping("/s/post/{id}")
         public String update(@PathVariable Integer id) {
             return "redirect:/post/" + id;
         }
 
-        @PostMapping("/post")
+        @PostMapping("/s/post")
         public String write() {
             return "redirect:/";
         }

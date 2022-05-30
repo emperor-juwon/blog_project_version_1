@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -87,7 +86,7 @@ public String login(HttpServletResponse response, User user) {
     return "redirect:/";
 }
 
-@GetMapping("/user/{id}")
+@GetMapping("/s/user/{id}")
 public String detail(@PathVariable Integer id, Model model) {
     
     //유효성 검사
@@ -114,12 +113,12 @@ public String detail(@PathVariable Integer id, Model model) {
     }
 }
 
-@GetMapping("/user/updateForm")
+@GetMapping("/s/user/updateForm")
 public String updateForm() {
     return "user/updateForm";
 }
 
-@PutMapping("/user/{id}")
+@PutMapping("/s/user/{id}")
 public String update(@PathVariable Integer id) {
     return "redirect:/user/" + id;
 }
