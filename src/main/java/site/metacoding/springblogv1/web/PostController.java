@@ -3,6 +3,7 @@ package site.metacoding.springblogv1.web;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,7 +33,8 @@ public class PostController {
         }
     
         @GetMapping({"/","/post/list"})
-        public String list() {
+        public String list(Model model) {
+            model.addAttribute("posts", postRepository.findAll());
             return "post/list";
         }
 
@@ -67,7 +69,6 @@ public class PostController {
             }
 
             post.setUser(principal);
-
             postRepository.save(post);
 
             return "redirect:/";
