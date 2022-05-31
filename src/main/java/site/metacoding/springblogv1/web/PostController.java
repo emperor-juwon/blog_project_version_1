@@ -1,5 +1,7 @@
 package site.metacoding.springblogv1.web;
 
+import java.util.Optional;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
@@ -39,8 +41,16 @@ public class PostController {
         }
 
         @GetMapping("/post/{id}")
-        public String detail(@PathVariable Integer id) {
-            return "post/detailForm";
+        public String detail(@PathVariable Integer id, Model model) {
+
+            Optional<Post> postOp = postRepository.findById(id);
+            if (postOp.isPresent()) {
+                Post postEntity = postOp.get();
+                model.addAttribute("post", postEntity);
+                return "post/detail";
+            } else {
+                return "error/page1";
+            }
         }
 
         @GetMapping("/s/post/{id}/updateForm")
