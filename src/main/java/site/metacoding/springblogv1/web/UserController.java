@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import site.metacoding.springblogv1.domain.user.User;
 import site.metacoding.springblogv1.domain.user.UserRepository;
+import site.metacoding.springblogv1.web.dto.ResponseDto;
 
 @Controller
 public class UserController {
@@ -33,6 +35,18 @@ public class UserController {
 public String joinForm() {
     return "user/joinForm";
 }
+
+@GetMapping("/api/user/username/same-check")
+public @ResponseBody ResponseDto<?> sameCheck(String username) {
+    User userEntity = userRepository.mUsernameSameCheck(username);
+
+    if (userEntity == null) {
+        return new ResponseDto<String>(1, "성공", "같은아이디없어");
+    } else {
+        return new ResponseDto<String>(-1, "실패", "중복아이디있어");
+    }
+}
+
 
 @PostMapping("/join")
 public String join(User user) {
