@@ -45,7 +45,16 @@ public class UserService {
     }
     
         @Transactional
-    public void 유저수정() {
+    public User 유저수정(Integer id, User user) {
+        Optional<User> userOp = userRepository.findById(id);
         
+        if (userOp.isPresent()) {
+            User userEntity = userOp.get();
+            userEntity.setPassword(user.getPassword());
+            userEntity.setEmail(user.getEmail());
+            return userEntity;
+        } else {
+            return null;
+        }
     }
 }

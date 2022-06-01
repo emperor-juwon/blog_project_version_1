@@ -18,6 +18,7 @@ spring:
 
 
   jpa:
+    open-in-view: true
     hibernate:
       ddl-auto: update
       naming:

@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
 import site.metacoding.springblogv1.domain.user.User;
-import site.metacoding.springblogv1.domain.user.UserRepository;
 import site.metacoding.springblogv1.service.UserService;
 import site.metacoding.springblogv1.web.dto.ResponseDto;
 
@@ -125,8 +125,23 @@ public String login(User user, HttpServletResponse response) {
     }
 
     @PutMapping("/s/user/{id}")
-    public String update(@PathVariable Integer id) {
-        return "redirect:/user/" + id;
+    public @ResponseBody ResponseDto<String> update(@PathVariable Integer id, @RequestBody User user) {
+ 
+        User principal = (User) session.getAttribute("principal");
+
+        //1. 인증체크
+        if (principal == null) {
+            return new ResponseDto<String>(-1, "인증실패", null);
+        }
+
+        if (principal.getId() != id) {
+            return new ResponseDto<String>(-1, "권한 없음", null);
+        }
+
+        User userEntity = userService.유저수정(id, user);
+        session.setAttribute("pricipal", userEntity);
+
+        return new ResponseDto<String>(1, "성공", null);
     }
 
     @GetMapping("/logout")
