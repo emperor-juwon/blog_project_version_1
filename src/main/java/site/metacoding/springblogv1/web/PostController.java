@@ -4,8 +4,7 @@ import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
 
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import site.metacoding.springblogv1.domain.post.Post;
 import site.metacoding.springblogv1.domain.post.PostRepository;
 import site.metacoding.springblogv1.domain.user.User;
+import site.metacoding.springblogv1.service.PostService;
 
 @RequiredArgsConstructor
 @Controller
@@ -26,7 +26,20 @@ public class PostController {
 
     private final  HttpSession session;
     private final PostRepository postRepository;
-    
+    private final PostService postService;
+
+                @GetMapping({"/","/post/list"})
+                public String list(Model model, @RequestParam(defaultValue = "0") Integer page) {
+
+                Page<Post> pagePosts = postService.글목록보기(page);
+                model.addAttribute("posts", pagePosts);
+                model.addAttribute("nextPage", page + 1);
+                model.addAttribute("prevPage", page - 1);
+
+                return "post/list";
+            }
+
+
         @GetMapping("/s/post/writeForm")
         public String writeForm() {
 
@@ -37,31 +50,23 @@ public class PostController {
             return "post/writeForm";
         }
     
-        @GetMapping({"/","/post/list"})
-        public String list(Model model, @RequestParam(defaultValue = "0") Integer page) {
-
-            //페이징 처리 
-            PageRequest pq = PageRequest.of(page, 3);
-            model.addAttribute("posts", postRepository.findAll(pq));
-            model.addAttribute("nextPage", page + 1);
-            model.addAttribute("prevPage", page - 1);
-
-          return "post/list";
-        }
-
-        @GetMapping("/post/{id}")
+        
+              @GetMapping("/post/{id}")
         public String detail(@PathVariable Integer id, Model model) {
 
+            Post postEntity = postService.글상세보기(id);
+
             Optional<Post> postOp = postRepository.findById(id);
-            if (postOp.isPresent()) {
-                Post postEntity = postOp.get();
+
+            if (postEntity == null) {
+                return "error/page1";
+            } else {
                 model.addAttribute("post", postEntity);
                 return "post/detail";
-            } else {
-                return "error/page1";
             }
         }
 
+      
         @GetMapping("/s/post/{id}/updateForm")
         public String updateForm(@PathVariable Integer id) {
             return "post/updateForm";
@@ -82,14 +87,7 @@ public class PostController {
 
             User principal = (User)session.getAttribute("principal");
 
-            //인증체크
-            if (session.getAttribute("principal") == null) {
-                return "redirect:/loginForm";
-            }
-
-            post.setUser(principal);
-            postRepository.save(post);
-
+            postService.글쓰기(post, principal);
             return "redirect:/";
         }
     }
