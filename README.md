@@ -4,13 +4,8 @@
 - **프로젝트 기간 : 2022.05.02~2022.06.02**
     
 <br/>
-<br />
 
 
-## ERD
-<img width="413" alt="Screenshot_10" src="https://user-images.githubusercontent.com/97711663/171603588-1eeb1a11-6739-44c0-94c2-a33e84f59f41.png">
-<br/>
-<br/>
 
  ## 💡 사용 기술
 
@@ -60,3 +55,6 @@
 ## 💡구현 결과
 
 [<img width="1280" alt="Screenshot_9" src="https://user-images.githubusercontent.com/97711663/171599688-cea8b64b-37fb-4e85-af4b-6d2875593c93.png">](https://youtu.be/WY2GZlTErKI)
+
+## 💡ERD
+<img width="413" alt="Screenshot_10" src="https://user-images.githubusercontent.com/97711663/171603588-1eeb1a11-6739-44c0-94c2-a33e84f59f41.png">
