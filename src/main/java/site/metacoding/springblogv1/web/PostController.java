@@ -74,6 +74,13 @@ public class PostController {
                           model.addAttribute("pageOwner", false);
                       }
                   }
+
+                  //스크립트 공격 방어하기
+                  String rawContent = postEntity.getContent();
+                  String encContent = rawContent.replaceAll("<script>", "&lt;script&gt;").replaceAll("</script>",
+                          "&lt;script/&gt;");
+                  postEntity.setContent(encContent);
+
                   model.addAttribute("post", postEntity);
                   return "post/detail";
         }
