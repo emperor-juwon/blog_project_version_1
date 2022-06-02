@@ -13,12 +13,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
 import site.metacoding.springblogv1.domain.post.Post;
 import site.metacoding.springblogv1.domain.post.PostRepository;
 import site.metacoding.springblogv1.domain.user.User;
 import site.metacoding.springblogv1.service.PostService;
+import site.metacoding.springblogv1.web.dto.ResponseDto;
 
 @RequiredArgsConstructor
 @Controller
@@ -73,8 +75,22 @@ public class PostController {
         }
 
         @DeleteMapping("/s/post/{id}")
-        public String delete(@PathVariable Integer id) {
-            return "redirect:/";
+        public @ResponseBody ResponseDto<String> delete(@PathVariable Integer id)
+        {
+            User principal = (User) session.getAttribute("principal");
+
+            //인증 확인
+            if (principal == null) {
+                return new ResponseDto<String>(-1, "로그인이 필요합니다.", null);
+            }
+            Post postEntity = postService.글상세보기(id);
+
+            //글 권한 확인
+            if (principal.getId() != postEntity.getUser().getId()) {
+                return new ResponseDto<String>(-1, "글 삭제할 권한이 없습니다.", null);
+            }
+            postService.글삭제하기(id);
+            return new ResponseDto<String>(1, "성공", null);
         }
 
         @PutMapping("/s/post/{id}")
