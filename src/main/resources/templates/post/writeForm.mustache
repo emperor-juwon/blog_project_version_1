@@ -9,7 +9,7 @@
             <input type="text" class="form-control" placeholder="Enter title" name="title">
         </div>
         <div class="mb-3">
-            <textarea name="content" rows="10" class="form-control"></textarea>
+            <textarea id="summernote" name="content" rows="10" class="form-control"></textarea>
         </div>
         <button type="submit" class="btn btn-dark">글 쓰기</button>
     </form>
@@ -18,4 +18,9 @@
 </div>
 <!-- 컨테이너 끝 -->
 
+<script>
+    $("#summernote").summernote({
+        height: 500
+    });
+</script>
 {{> /layout/footer}}
