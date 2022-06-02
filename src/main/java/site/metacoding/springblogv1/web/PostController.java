@@ -3,6 +3,7 @@ package site.metacoding.springblogv1.web;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -78,8 +80,23 @@ public class PostController {
 
       
         @GetMapping("/s/post/{id}/updateForm")
-        public String updateForm(@PathVariable Integer id) {
-            return "post/updateForm";
+        public String updateForm(@PathVariable Integer id, Model model) {
+
+            //인증
+            User principal = (User) session.getAttribute("principal");
+
+            if (principal == null) {
+                return "error/page1";
+            }
+
+            //권한
+            Post postEntity = postService.글상세보기(id);
+            
+            if (postEntity.getUser().getId() != principal.getId()) {
+                return "error/page1";
+            }
+            model.addAttribute("post", postEntity);
+                    return "post/updateForm";
         }
 
         @DeleteMapping("/s/post/{id}")
@@ -102,8 +119,24 @@ public class PostController {
         }
 
         @PutMapping("/s/post/{id}")
-        public String update(@PathVariable Integer id) {
-            return "redirect:/post/" + id;
+        public @ResponseBody ResponseDto<String> update(@PathVariable Integer id, @RequestBody Post post) {
+
+            //인증
+            User principal = (User) session.getAttribute("principal");
+
+            if (principal == null) {
+                return new ResponseDto<String>(-1, "로그인이 필요합니다.", null);
+            }
+            
+            Post postEntity = postService.글상세보기(id);
+
+            if (postEntity.getUser().getId() != principal.getId()) {
+                return new ResponseDto<String>(-1, "해당 게시물을 수정할 권한이 없습니다.", null);
+            }
+
+            postService.글수정하기(post, id);
+
+            return new ResponseDto<String>(1, "수정 성공!", null);
         }
 
         @PostMapping("/s/post")
