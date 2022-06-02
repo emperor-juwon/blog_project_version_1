@@ -1,7 +1,5 @@
 package site.metacoding.springblogv1.web;
 
-import java.util.Optional;
-
 import javax.servlet.http.HttpSession;
 
 import org.springframework.data.domain.Page;
@@ -54,18 +52,28 @@ public class PostController {
     
         
               @GetMapping("/post/{id}")
-        public String detail(@PathVariable Integer id, Model model) {
+              public String detail(@PathVariable Integer id, Model model) {
 
-            Post postEntity = postService.글상세보기(id);
+                  User principal = (User) session.getAttribute("principal");
 
-            Optional<Post> postOp = postRepository.findById(id);
+                  Post postEntity = postService.글상세보기(id);
 
-            if (postEntity == null) {
-                return "error/page1";
-            } else {
-                model.addAttribute("post", postEntity);
-                return "post/detail";
-            }
+                  //게시물이 null일 때
+                  if (postEntity == null) {
+                      return "error/page1";
+                  }
+                  
+                  //principal이 null이 아닐 때
+                  if (principal != null) {
+                      //게시글의 id와 principal의 id가 같을 때
+                      if (principal.getId() == postEntity.getUser().getId()) {
+                          model.addAttribute("pageOwner", true);
+                      } else {
+                          model.addAttribute("pageOwner", false);
+                      }
+                  }
+                  model.addAttribute("post", postEntity);
+                  return "post/detail";
         }
 
       
