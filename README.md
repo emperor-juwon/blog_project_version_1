@@ -5,7 +5,9 @@
     
 <br/>
 
-
+## 💡 프로젝트 목표
+- CRUD에 대한 이해와 연습
+<br/>
 
  ## 💡 사용 기술
 
@@ -60,3 +62,11 @@
 
 ## 💡ERD
 <img width="413" alt="Screenshot_10" src="https://user-images.githubusercontent.com/97711663/171603588-1eeb1a11-6739-44c0-94c2-a33e84f59f41.png">
+
+<br/>
+
+## 💡 프로젝트 리뷰 및 개선방향
+- 중복되는 코드 정리
+- 로그인, 회원가입 등 인증과 보안에 대한 공부 필요
+- 메소드 네이밍에 대한 고민
+- restful API 주소 설계 규칙에 맞는 주소 설계 필요
