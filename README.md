@@ -67,6 +67,6 @@
 
 ## 💡 프로젝트 리뷰 및 개선방향
 - 중복되는 코드 정리
-- 로그인, 회원가입 등 인증과 보안에 대한 공부 필요
 - 메소드 네이밍에 대한 고민
 - restful API 주소 설계 규칙에 맞는 주소 설계 필요
+- [블로그 ver.2 깃허브](https://github.com/emperor-juwon/blog_project_version_2)
